@@ -8,20 +8,31 @@ import java.awt.event.MouseListener;
 import java.util.Random;
 import javax.swing.Timer;
 import javax.swing.ImageIcon;
-import View.GUI;
+import Controller.GameEngine;
 import javax.swing.*;
 
 
+/**
+ * @author Andrew
+ *
+ * The class that specifies a chicken's properties
+ * This class serves as a Model within the Model-View-Controller Design Pattern
+ */
 public class Chicken implements Runnable {
 	
-	public  int 				xPosition;
-	public  int 				yPosition;
-	public  int 				value 			= 0;
-	public  static 	int  		directionSwitch = 0;
-	public  boolean 			chickenKilled 	= false;
-	public  JLabel 				chicken;
-	public  Random 				rand 			= new Random();
+	public  		int 				xPosition;
+	public  		int 				yPosition;
+	public  		int 				value 			= 0;
+	public  static 	int  				directionSwitch = 0;
+	public  boolean 					chickenKilled 	= false;
+	public  		JLabel 				chicken;
+	public  		Random 				rand 			= new Random();
 	
+	
+	
+	/** An enemy chicken must be created
+	 * 
+	 */
 	public Chicken()
 	{
 		xPosition = (int) (((Math.random() * 360) % 360)*1.3);
@@ -70,6 +81,11 @@ public class Chicken implements Runnable {
 	
 	}
 
+
+	/** When an enemy chicken is created, it does not move
+	 *  When this method is called, the enemy chicken walks to a random location
+	 *  on the screen. This method has to be called repeatedly in a loop.
+	 */
 	public void ScatterToRandomlocation()
 	{	
 		
@@ -84,7 +100,7 @@ public class Chicken implements Runnable {
 						this.chicken.getLocation().y >= 768)
 				{
 					//Attempt to resolve Ghost chickens that don't appear on the screen
-				GUI.enemies.remove(this);
+				GameEngine.enemies.remove(this);
 				//	System.out.println("Chicken has walked away from screen!");
 				}
 				
@@ -99,7 +115,7 @@ public class Chicken implements Runnable {
 						this.chicken.getLocation().y >= 768)
 				{
 					//Attempt to resolve Ghost chickens that don't appear on the screen
-				GUI.enemies.remove(this);
+					GameEngine.enemies.remove(this);
 				//	System.out.println("Chicken has walked away from screen!");
 				}
 				
@@ -115,7 +131,7 @@ public class Chicken implements Runnable {
 						this.chicken.getLocation().y >= 768)
 				{
 					//Attempt to resolve Ghost chickens that don't appear on the screen
-				GUI.enemies.remove(this);
+					GameEngine.enemies.remove(this);
 				//	System.out.println("Chicken has walked away from screen!");
 				}
 			break;
@@ -139,6 +155,10 @@ public class Chicken implements Runnable {
 				
 	}
 
+	
+	/** Print the enemy chickens location for testing purposes
+	 * 
+	 */
 	public void PrintChickenLocation()
 	{
 		if(chickenKilled == false)
@@ -147,50 +167,58 @@ public class Chicken implements Runnable {
 		}
 	}
 
-	//Called when chicken button has been clicked on
+	
+	/** 
+	 * Called when chicken button has been clicked on
+	 */
 	public void ChickenKilled()
 	{
-		GUI.hitFlash.setLocation(this.chicken.getX()-400,this.chicken.getY()-300);
+		GameEngine.hitFlash.setLocation(this.chicken.getX()-400,this.chicken.getY()-300);
 
 		Timer stopWatch  = new Timer(60,new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GUI.hitFlash.setVisible(false);
+				GameEngine.hitFlash.setVisible(false);
 			}
 		});
         stopWatch.setRepeats(false);
         stopWatch.start();
         
-        GUI.hitFlash.setVisible(true);
+		GameEngine.hitFlash.setVisible(true);
         
 			//Update Score
-			GUI.score += 100;
-			GUI.scoreLabel.setForeground(Color.BLACK);
-			GUI.scoreLabel.setText("Score: " + GUI.score);
+		GameEngine.score += 100;
+		GameEngine.scoreLabel.setForeground(Color.BLACK);
+		GameEngine.scoreLabel.setText("Score: " + GameEngine.score);
 			
 			
 			//Clear chicken from screen
 			chickenKilled = true;
 			chicken.setVisible(false);
-			GUI.enemies.remove(chicken);
+			GameEngine.enemies.remove(chicken);
 
 			//Play explosion sound
-			GUI.PlaySound("explosion2.wav");   
+			GameEngine.PlaySound("explosion2.wav");   
 	       
 	        //Lower the enemy amount checker for GUI cleanliness
-			GUI.enemyAmountChecker--;
-			System.out.println("enemyAmountChecker: " + GUI.enemyAmountChecker);
+			GameEngine.enemyAmountChecker--;
+			System.out.println("enemyAmountChecker: " + GameEngine.enemyAmountChecker);
 			
 		//	GUI.hitFlash.setVisible(false);
 		
 		
 	}
 	
+	
+	/* (non-Javadoc) Responsible for the mobilizing the chicken on the screen
+	 * @see java.lang.Runnable#run()
+	 * 
+	 */
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+		
 		
 		while(true)
 		{

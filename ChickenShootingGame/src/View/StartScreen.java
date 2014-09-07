@@ -10,14 +10,26 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import Controller.GameEngine;
+
+/**
+ * @author Andrew
+ * 
+ * The class which is responsible for showing the Game Over Screen 
+ * This class serves as a 'View' within the Model-View-Controller 
+ * Design Pattern
+ */
 public class StartScreen extends JFrame {
 
 	
-	/**
+	/** Serial Version Unique ID
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/** The user has to press the 'Start' on the start screen to start the game
+	 * 
+	 */
 	public StartScreen()
 	{		
 	
@@ -34,7 +46,7 @@ public class StartScreen extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
 				startScreen.setVisible(false);
-				GUI.PlaySound("Chckns02.wav");
+				GameEngine.PlaySound("Chckns02.wav");
 				(new Thread(new GUI())).start();
 			}
 		});
@@ -48,7 +60,7 @@ public class StartScreen extends JFrame {
 		startScreen.setSize(800,678);	
 		startScreen.setVisible(true);
 		
-		GUI.PlaySound("explosion.wav");
+		GameEngine.PlaySound("explosion.wav");
 		
 	}
 	
