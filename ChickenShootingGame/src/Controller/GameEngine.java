@@ -1,6 +1,6 @@
 package Controller;
 
-import java.awt.Color;
+
 import java.awt.Cursor;
 import java.awt.Image;
 import java.awt.Point;
@@ -20,9 +20,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 import Model.Chicken;
+import Model.Goat;
+import Model.Snake;
 import View.GUI;
 import View.GameOverScreen;
 import View.WinScreen;
+import Model.Enemy;
 
 /**
  * @author Andrew
@@ -36,26 +39,27 @@ public class GameEngine {
 
 
 
-	public	static  			ArrayList<Chicken> 	enemies 				= new ArrayList<Chicken>();
-	public  static 	int 							score 					= 0;
-	public  static 				JLabel 				scoreLabel 				= new JLabel("Score: " + score);
-	public  static 	int 							numberOfEnemychickens 	= 1;
-	public  static 	int 							enemyAmountChecker 		= 1;	
-	public 	static	boolean 						enemyDirectionChanger 	= false;
-	public  static   			JLabel 				backgroundImage 		= new JLabel(new ImageIcon(GUI.class.getClassLoader().getResource("chickenBackground.jpg")));
-	public 	static 	boolean 						soundPlaying 			= false;
-	public  static				JLabel				hitFlash				= new JLabel(new ImageIcon(GUI.class.getClassLoader().getResource("explosionTransparent.png")));
-	public  static 				Clip 				clip;
-	public  static 				int					speedUP 				= 0;
+	public	static  	ArrayList<Enemy> 	enemies 				= new ArrayList<Enemy>();
+	public  static 		int 				score 					= 0;
+	public  static 		JLabel 				scoreLabel 				= new JLabel("Score: " + score);
+	public  static 		int 				numberOfEnemychickens 	= 1;
+	public  static 		int 				enemyAmountChecker 		= 1;	
+	public 	static		boolean				enemyDirectionChanger 	= false;
+	public  static  	JLabel 				backgroundImage 		= new JLabel(new ImageIcon(GUI.class.getClassLoader().getResource("chickenBackground.jpg")));
+	public 	static 		boolean				soundPlaying 			= false;
+	public  static		JLabel				hitFlash				= new JLabel(new ImageIcon(GUI.class.getClassLoader().getResource("explosionTransparent.png")));
+	public  static 		Clip 				clip;
+	public  static 		int					speedUP 				= 0;
+	public  static  	UserInput 			player;
+
 	
 	//Cursor adaptation to crossHair
-	public 	static				Toolkit 			toolkit 				= Toolkit.getDefaultToolkit(); 
-	public	static				Image 				image 					= toolkit.getImage(GUI.class.getClassLoader().getResource("crosshair.png"));
-	public	static				Point 				hotSpot 				= new Point(0,0);
-	public 	static				Cursor 				cursor 					= toolkit.createCustomCursor(image, hotSpot, "crossHair");
+	public 	static		Toolkit 			toolkit 				= Toolkit.getDefaultToolkit(); 
+	public	static		Image 				image 					= toolkit.getImage(GUI.class.getClassLoader().getResource("crosshair.png"));
+	public	static		Point 				hotSpot 				= new Point(0,0);
+	public 	static		Cursor 				cursor 					= toolkit.createCustomCursor(image, hotSpot, "crossHair");
 	
-	
-	
+	public 	static		int					enemySelector 			= new Random().nextInt(3);
 	
 	/**
 	 * @param filePath of the audio file to be played.
@@ -76,9 +80,6 @@ public class GameEngine {
 				Clip clip = AudioSystem.getClip();
 				clip.open(audioIn);
 				clip.loop(0);
-				
-		
-
 			}
 			catch (IOException | UnsupportedAudioFileException | LineUnavailableException   ex2)
 			{
@@ -99,28 +100,31 @@ public class GameEngine {
     public static void CreateEnemyChicken(int amountOfEnemyChickens)
 	{
 
-			for(int i = 0 ; i < amountOfEnemyChickens; i++)
-			{
-					Chicken chick1 = new Chicken();
-					enemies.add(chick1);
-					GUI.frame.add(chick1.chicken);
-				    Thread t1 = new Thread(chick1,"Chick Thread A");
-				    t1.start();
-				    PlaySound("ninjaChicken.wav");
-				    System.out.println("Enemy created!");
+		//	for(int i = 0 ; i < amountOfEnemyChickens; i++)
+		//	{
+				//	Chicken chick1 = new Chicken();
+					
+				//	enemies.add(chick1);
+					
+					
+				//	GUI.frame.add(chick1.chicken);
 
-			}
-			
-/*			for (Iterator<Chicken> it = enemies.iterator(); it.hasNext();)
-			{
-				Chicken chick = it.next();
-				it.remove();
-				enemies.remove(chick);
-				
-			}*/
-			
-			
-	
+					
+					// What the hell does this mean?? Oh my goodness
+					// Answer: That's because all chickens have a run method
+					// The Chicken class has a start() method which
+					// can run seperately in a thread
+					// giving every individual chicken the ability
+					// to act/react or behave in their own unique way
+					// and with 'act/react or behave in their own unique way' I mean
+					// perform any particular method on them
+					// The 'Chick Thread A' is just a name for the thread
+				//    Thread t1 = new Thread(chick1,"Chick Thread A");
+				//   t1.start();	   
+				//   PlaySound("ninjaChicken.wav");
+
+
+		//	}
 	}
 
     
@@ -129,39 +133,45 @@ public class GameEngine {
 	 * it needs to be eliminated from the screen. 
 	 * The score also needs to updated.
 	 */
-	public static void CheckIfChickenWasKilled()
+	public static void CheckIfEnemyWasKilled()
 	{
 		
-		for(Iterator<Chicken> it = enemies.iterator() ; it.hasNext();)
+		for(Iterator<Enemy> it = enemies.iterator() ; it.hasNext();)
 		{
-			Chicken chick = it.next();
-			if(chick.chicken.getLocation().x <= -100 || 
-					chick.chicken.getLocation().x >= 1024 ||
-					chick.chicken.getLocation().y <= -100 || 
-							chick.chicken.getLocation().y >= 768)
+			Enemy enemy = it.next();
+			if(enemy.enemy.getLocation().x <= 0 || 
+					enemy.enemy.getLocation().x >= GUI.GAME_WINDOW_WIDTH ||
+					enemy.enemy.getLocation().y <= 0 || 
+							enemy.enemy.getLocation().y >= GUI.GAME_WINDOW_HEIGHT)
 			{
-				it.remove();
-				System.out.println("Location of Ghost Chicken: " + chick.chicken.getLocation());
+
+				System.out.println("Location of Ghost Chicken: " + enemy.enemy.getLocation());
 				System.out.println("Chicken has walked away from screen!");
 				
-				chick.chickenKilled = true;	
-				if(chick.chickenKilled == true)
+			//	chick.chickenKilled = true;	
+				if(enemy.enemyKilled == true)
 				{
-					score = score -200;
+					score = score -50;
+					
 					scoreLabel.setText("Score:" + score);
+					
 					PlaySound("WarningSound.wav");
-					chick.chicken.setLocation(0, 0);
+					
+				//	chick.chicken.setLocation(0, 0);
+					
+					it.remove();
+					
+					enemies.remove(enemy);
+					
+					GUI.frame.remove(enemy.enemy);
 				}
-
 				
-				enemies.remove(chick);
-				GUI.frame.remove(chick.chicken);
-				//it.remove();
 			}
 			
 		}
 		
-		if(score <= -100 )
+		
+		if(score <= -10 )
 		{
 			new GameOverScreen();
 		}
@@ -170,53 +180,6 @@ public class GameEngine {
 	}
    	
 	
-	/**
-	 * The game has to end if the score is lower than -100
-	 */
-	public static void MonitorAndLimitTheAmountOfChickenInGame()
-	{	
-		if( enemyAmountChecker > 6)
-		{
-				PlaySound("WarningSound.wav");
-				
-				try
-				{
-					Thread.sleep(1300);
-					score = score -200;	
-					scoreLabel.setForeground(Color.RED);			
-					scoreLabel.setText("Score: " + score);
-					
-					if(score <= -100)
-					{
-						new GameOverScreen();
-					}
-				}
-				catch (InterruptedException ex)
-				{
-						ex.printStackTrace();
-				}
-		
-				
-		}
-		
-		if (enemyAmountChecker > 0 && enemyAmountChecker < 50)
-		{
-			try
-			{
-				Thread.sleep((1000 - speedUP) + new Random().nextInt(300));
-				CreateEnemyChicken(numberOfEnemychickens);
-				enemyAmountChecker++;	
-			}
-			
-			catch (InterruptedException ex)
-			{
-				ex.printStackTrace();
-			}
-				
-			
-		}
-	
-	}
 	
 	
 	/** 
@@ -224,7 +187,7 @@ public class GameEngine {
 	 */
 	public static void DetermineWetherPlayerHasReachedMaxScore()
 	{
-		if(score >= 7000)
+		if(score >= 2000)
 		{
 			new WinScreen();
 		}
@@ -269,6 +232,96 @@ public class GameEngine {
 	}
 
 	
+	/** Generate enemies, chickens, cows, whatever, this will be a pseudo-generic method
+	 * 
+	 */
+	public static void RandomEnemyGenerator()
+	{
+		if (enemyAmountChecker > 0 && enemyAmountChecker < 50)
+		{
+			try
+			{
+				Thread.sleep((1000 - speedUP) + new Random().nextInt(300));
+				
+				switch (enemySelector)
+				{
+					case 0:	create("chicken"); 	enemySelector = new Random().nextInt(3); 	break;
+				
+					case 1:	create("goat"); 	enemySelector = new Random().nextInt(3); 	break;
+				
+					case 2: create("snake"); 	enemySelector = new Random().nextInt(3); 	break;
+				}
+				
+
+				
+				
+				enemyAmountChecker++;	
+			}
+			
+			catch (InterruptedException ex)
+			{
+				ex.printStackTrace();
+			}
+				
+			
+		}
+	}
+	
+	/** Factory method for creating units
+	 *  In this case chicken, goats, snakes, etc.
+	 */
+	public static void create(String enemyType)
+	{
+		switch(enemyType)
+		{
+		case "chicken":
+			
+			Chicken chicken = new Chicken("chickenator2.png");
+			
+			chicken.MobilizeEnemyInRandomXDirection(new Random().nextInt(2));
+			chicken.MobilizeEnemyInRandomYDirection(new Random().nextInt(2));
+			enemies.add(chicken);
+			GUI.frame.add(chicken.enemy);	
+		    Thread t1 = new Thread(chicken,"Chick Thread A");
+		    t1.start();
+		    PlaySound("ninjaChicken.wav");
+		   
+			break;
+			
+		case "goat":
+
+			Goat goat = new Goat("goat.png");
+			goat.MobilizeEnemyInRandomXDirection(new Random().nextInt(2));
+			goat.MobilizeEnemyInRandomYDirection(new Random().nextInt(2));
+			enemies.add(goat);
+			GUI.frame.add(goat.enemy);
+			
+		    Thread t2 = new Thread(goat,"Goat Thread A"); 
+		    t2.start();
+		    PlaySound("GoatSound.wav");
+		   
+			break;
+			
+		case "snake":
+
+			Snake snake = new Snake("snake.png");
+			snake.MobilizeEnemyInRandomXDirection(new Random().nextInt(2));
+			snake.MobilizeEnemyInRandomYDirection(new Random().nextInt(2));
+			enemies.add(snake);
+			GUI.frame.add(snake.enemy);
+			
+		    Thread t3 = new Thread(snake,"Snake Thread A");  
+		    t3.start();
+		    PlaySound("SnakeSound.wav");
+
+			break;
+			
+			
+			
+			
+		}
+		
+	}
 	
 	
 	

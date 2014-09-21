@@ -13,11 +13,16 @@ import Controller.GameEngine;
  * This class serves as a 'View' within the Model-View-Controller 
  * Design Pattern
  */
-public class GUI extends JFrame implements Runnable {
+//public class GUI extends JFrame implements Runnable 
+
+public class GUI extends JFrame
+{
 
 
 	private static  final 		long 				serialVersionUID 		= 1L;
 	public 	static  			JFrame 				frame;
+	public 	static 				int			 		GAME_WINDOW_WIDTH		= 800;
+	public	static				int					GAME_WINDOW_HEIGHT		= 600;
 	
 	/**
 	 * A Graphic User Interface has to be created in order to run the game.
@@ -29,10 +34,10 @@ public class GUI extends JFrame implements Runnable {
 	{	
 		frame = new JFrame("Chicken Shooting Game");
 		frame.setLayout(null);
-		frame.setSize(1024, 768);
+		frame.setSize(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		GameEngine.backgroundImage.setSize(800,600);
+		GameEngine.backgroundImage.setSize(GAME_WINDOW_WIDTH,GAME_WINDOW_HEIGHT);
 		frame.setContentPane(GameEngine.backgroundImage);	
 		
 		GameEngine.scoreLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
@@ -42,67 +47,20 @@ public class GUI extends JFrame implements Runnable {
 		frame.setCursor(GameEngine.cursor);
 		
 		GameEngine.hitFlash.setSize(1024,768);
-		GameEngine.hitFlash.setBackground(Color.RED);
+		//GameEngine.hitFlash.setBackground(Color.RED);
 		frame.add(GameEngine.hitFlash);
+		
 		GameEngine.hitFlash.setVisible(false);
+		
+		frame.setLocation( 
+				(int) StartScreen.width/2 - GAME_WINDOW_WIDTH/2, 
+				(int) StartScreen.height/2 - GAME_WINDOW_HEIGHT/2
+				);
 		frame.setVisible(true);
 
 
 	}
 
 
-	
-	/** The Game has to be updated constantly in order to show the moving 
-	 * enemy chickens on the screen.
-	 */
-	public void start() {
-		// define a new thread
-		Thread th = new Thread(this);
-		// start this thread
-		th.start();
 
-	}
-
-	
-	/* (non-Javadoc) This where the actual GAME LOOP is placed
-	 * @see java.lang.Runnable#run()
-	 * 
-	 */
-	public void run() {
-		// lower threadPriority
-		Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-
-		// run a long while (true) this means in our case "always"
-		while (true) 
-		{
-			
-			GameEngine.MonitorAndLimitTheAmountOfChickenInGame();
-			GameEngine.CheckIfChickenWasKilled();
-			GameEngine.DetermineWetherPlayerHasReachedMaxScore();
-			GameEngine.speedUpEnemyAppearance();
-			
-			frame.revalidate();
-			frame.repaint();
-			System.out.println("Running..");
-			try
-			{
-				Thread.sleep(20);
-			}
-			catch (InterruptedException ex)
-			{
-				ex.printStackTrace();
-			}
-			
-			
-			// set ThreadPriority to maximum value
-			Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-
-			
-			
-		}
-		
-		
-	}
-	
-	
 }
