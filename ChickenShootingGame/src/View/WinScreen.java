@@ -33,11 +33,16 @@ public class WinScreen {
 		gameWinFrame.setVisible(true);
 		GameEngine.PlaySound("WinningSound.wav");
 		
+		gameWinFrame.setLocation( 
+				(int) StartScreen.width/2 - GameScreen.GAME_WINDOW_WIDTH/2, 
+				(int) StartScreen.height/2 - GameScreen.GAME_WINDOW_HEIGHT/2
+				);
+		
 		try
 		{
-			GUI.frame.setVisible(false);
+			GameScreen.frame.setVisible(false);
 			Thread.sleep(5000);
-			GUI.frame.dispatchEvent(new WindowEvent(GUI.frame, WindowEvent.WINDOW_CLOSING));
+			GameScreen.frame.dispatchEvent(new WindowEvent(GameScreen.frame, WindowEvent.WINDOW_CLOSING));
 			System.exit(0);
 		}
 		catch (InterruptedException ex)

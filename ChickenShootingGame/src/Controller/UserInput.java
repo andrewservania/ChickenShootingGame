@@ -7,8 +7,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 
-import Model.Chicken;
-import Model.Enemy;
+import Model.Unit;
 import View.StartScreen;
 
 /**
@@ -18,37 +17,32 @@ import View.StartScreen;
  */
 public class UserInput {
 	
-	public UserInput(final Enemy enemy)
+	public UserInput(final Unit enemy)
 	{
-		enemy.enemy.addMouseListener(new MouseListener() {
+		enemy.unitEnemyPictureLabel.addMouseListener(new MouseListener() {
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
 				enemy.EnemyKilled();
 			}
 			
 			@Override
 			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 		});
@@ -65,9 +59,7 @@ public class UserInput {
 			// If start button is clicked, launch game screen
 
 			GameEngine.PlaySound("Chckns02.wav");
-			
-			new Thread(new GameLoop()).start();
-			
+			new Thread(new GameLoop()).start();	
 			StartScreen.startScreen.setVisible(false);
 			
 		}

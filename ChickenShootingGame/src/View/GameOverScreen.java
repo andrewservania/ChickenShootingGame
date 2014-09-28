@@ -34,9 +34,9 @@ public class GameOverScreen {
 		
 		try
 		{
-			GUI.frame.setVisible(false);
+			GameScreen.frame.setVisible(false);
 			Thread.sleep(3000);
-			GUI.frame.dispatchEvent(new WindowEvent(GUI.frame, WindowEvent.WINDOW_CLOSING));
+			GameScreen.frame.dispatchEvent(new WindowEvent(GameScreen.frame, WindowEvent.WINDOW_CLOSING));
 			System.exit(0);
 		}
 		catch (InterruptedException ex)
