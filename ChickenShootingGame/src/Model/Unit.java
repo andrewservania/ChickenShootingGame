@@ -3,59 +3,58 @@ package Model;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.Timer;
-import View.GameScreen;
-import Controller.GameEngine;
+
 import Controller.GameLoop;
 import Controller.UserInput;
+import Levels.LevelFactory;
 
 
-//public class Unit implements Runnable{
+
 public class Unit{
 	
 	public Unit unit;
 	
 	public  		int 				xPosition;
 	public  		int 				yPosition;
-	
+	public			int 				screenWidth;
+	public 			int 				screenHeight;
 	public  		boolean 			enemyKilled 	= false;
 	public  		JLabel 				unitEnemyPictureLabel;
+	public   		int 				xAxisCollisionCheck = 1;
+	public  		int 				yAxisCollisionCheck = 1;
+	public			int					xSpeed = 4;
+	public			int					ySpeed = 4;
+	public enum UnitStates {IDLE,APPROACH,GET_POWERUP,ATTACK,EVADE};
 	
-	public   	int xAxisCollisionCheck = 1;
-	public  	int yAxisCollisionCheck = 1;
 	
-	public Unit(String enemyType)
+ 	public Unit(String enemyType)
 	{
+ 	
 		unitEnemyPictureLabel = new JLabel(new ImageIcon(this.getClass().getClassLoader().getResource(enemyType)));	
-	//	GameLoop.gameObjects.add(this);
-		GameScreen.frame.add(unitEnemyPictureLabel);
-		GameEngine.player = new UserInput(this);
+		//GameLoop.gameObjects.add(this);
+		GameLoop.frame.add(unitEnemyPictureLabel);
+		GameLoop.player = new UserInput(this);
 		
+		
+
 		xPosition = 100 + (int) (((Math.random() * 360) % 360)*0.6);
 		yPosition = 100 + (int) (((Math.random() * 360) % 360)*0.6);
-		unitEnemyPictureLabel.setLocation(xPosition, yPosition);
-		unitEnemyPictureLabel.setSize(238, 249);
-	
 		
+		unitEnemyPictureLabel.setLocation(xPosition, yPosition);
+		unitEnemyPictureLabel.setSize(238, 249);	
 	}
 	
-	public void draw()
-	{
-		// What do I put here actually? 
-		// I already call the necessary methods within the constructor..
-		//TODO: Gotta figure this one out.
-		//TODO: Find out whether it's necessary to use this method
-		//unit.draw(); 
-	}
-
-	public  void MobilizeEnemyInRandomXDirection(int x)
+	public void MobilizeEnemyInRandomXDirection(int x)
 	{
 		xAxisCollisionCheck = x;
 	}
 	
-	public  void MobilizeEnemyInRandomYDirection(int y)
+	public void MobilizeEnemyInRandomYDirection(int y)
 	{
 		yAxisCollisionCheck = y;
 	}
@@ -66,7 +65,7 @@ public class Unit{
 		{
 			case 0:
 				;
-				if	(unitEnemyPictureLabel.getLocation().x >= GameScreen.GAME_WINDOW_WIDTH)
+				if	(unitEnemyPictureLabel.getLocation().x >= GameLoop.GAME_WINDOW_WIDTH)
 				{	
 					xAxisCollisionCheck = 1;
 				}
@@ -91,7 +90,7 @@ public class Unit{
 			case 0:
 
 			
-				if (unitEnemyPictureLabel.getLocation().y >= GameScreen.GAME_WINDOW_HEIGHT)
+				if (unitEnemyPictureLabel.getLocation().y >= GameLoop.GAME_WINDOW_HEIGHT)
 				{
 					yAxisCollisionCheck = 1;
 				}
@@ -118,11 +117,11 @@ public class Unit{
 		switch (xAxisCollisionCheck)
 		{
 			case 0: 
-				unitEnemyPictureLabel.setLocation(unitEnemyPictureLabel.getLocation().x += 4, unitEnemyPictureLabel.getLocation().y);
+				unitEnemyPictureLabel.setLocation(unitEnemyPictureLabel.getLocation().x += xSpeed, unitEnemyPictureLabel.getLocation().y);
 				break;
 
 			case 1: 
-				unitEnemyPictureLabel.setLocation(unitEnemyPictureLabel.getLocation().x -= 4, unitEnemyPictureLabel.getLocation().y);
+				unitEnemyPictureLabel.setLocation(unitEnemyPictureLabel.getLocation().x -= xSpeed, unitEnemyPictureLabel.getLocation().y);
 				break;
 
 			default:
@@ -134,10 +133,10 @@ public class Unit{
 		switch (yAxisCollisionCheck)
 		{
 			case 0:
-				unitEnemyPictureLabel.setLocation(unitEnemyPictureLabel.getLocation().x, unitEnemyPictureLabel.getLocation().y+= 4);
+				unitEnemyPictureLabel.setLocation(unitEnemyPictureLabel.getLocation().x, unitEnemyPictureLabel.getLocation().y+= ySpeed);
 				break;
 			case 1:
-				unitEnemyPictureLabel.setLocation(unitEnemyPictureLabel.getLocation().x, unitEnemyPictureLabel.getLocation().y-= 4);
+				unitEnemyPictureLabel.setLocation(unitEnemyPictureLabel.getLocation().x, unitEnemyPictureLabel.getLocation().y-= ySpeed);
 				break;
 
 			default:
@@ -150,14 +149,18 @@ public class Unit{
 	
 	public void update()
 	{
+		move();		
+		collide();
+		//GameLoop.frame.getGraphics().dispose();
+		
 		if(unitEnemyPictureLabel.getLocation().x <= 0 || 
-				unitEnemyPictureLabel.getLocation().x >= GameScreen.GAME_WINDOW_WIDTH ||
+				unitEnemyPictureLabel.getLocation().x >= GameLoop.GAME_WINDOW_WIDTH ||
 				unitEnemyPictureLabel.getLocation().y <= 0 || 
-						unitEnemyPictureLabel.getLocation().y >= GameScreen.GAME_WINDOW_HEIGHT)
+						unitEnemyPictureLabel.getLocation().y >= GameLoop.GAME_WINDOW_HEIGHT)
 		{
 
-			System.out.println("Location of Ghost Chicken: " + unitEnemyPictureLabel.getLocation());
-			System.out.println("Chicken has walked away from screen!");
+			//System.out.println("Location of Ghost Chicken: " + unitEnemyPictureLabel.getLocation());
+			//System.out.println("Chicken has walked away from screen!");
 			
 		//	chick.chickenKilled = true;	
 			
@@ -167,18 +170,19 @@ public class Unit{
 			{
 				//GameLoop.score = GameLoop.score -50;
 				
-				//GameScreen.scoreLabel.setText("Score:" + GameLoop.score);
+				//GameLoop.scoreLabel.setText("Score:" + GameLoop.score);
 				
-				//GameEngine.PlaySound("WarningSound.wav");
+				//GameLoop.PlaySound("WarningSound.wav");
 				
 			//	chick.chicken.setLocation(0, 0);
 				
 				// Misschien moet ik dit ook gebruiken?
 				//GameLoop.gameObjects.remove();
 				
+				
 				GameLoop.gameObjects.remove(unitEnemyPictureLabel);
 				
-				GameScreen.frame.remove(unitEnemyPictureLabel);
+				GameLoop.frame.remove(unitEnemyPictureLabel);
 			}
 			
 		}
@@ -190,7 +194,7 @@ public class Unit{
 	public void EnemyKilled()
 	{
 			//If enemy is killed. Show Gun Flash
-			GameEngine.hitFlash.setLocation(this.unitEnemyPictureLabel.getX()-400,this.unitEnemyPictureLabel.getY()-300);	
+			GameLoop.hitFlash.setLocation(unitEnemyPictureLabel.getX()-400,unitEnemyPictureLabel.getY()-300);	
 			
 			//Show Gun Flash for 60 milliseconds
 			Timer stopWatch  = new Timer(60,new ActionListener() {
@@ -198,27 +202,28 @@ public class Unit{
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub
-					GameEngine.hitFlash.setVisible(false);
+					GameLoop.hitFlash.setVisible(false);
 				}
 			});
 	        stopWatch.setRepeats(false);
 	        stopWatch.start();
-			GameEngine.hitFlash.setVisible(true);
+			GameLoop.hitFlash.setVisible(true);
 	        
 			//Update Score
 			GameLoop.score += 100;
 			GameLoop.amountOfEnemiesKilled+= 1;
-			GameScreen.scoreLabel.setForeground(Color.BLACK);
-			GameScreen.scoreLabel.setText("Score: " + GameLoop.score);
+			GameLoop.scoreLabel.setForeground(Color.BLACK);
+			GameLoop.scoreLabel.setText("Score: " + GameLoop.score);
 			
 			
 			//Clear chicken from screen
 			enemyKilled = true;
 			unitEnemyPictureLabel.setVisible(false);
+		
 			GameLoop.gameObjects.remove(unitEnemyPictureLabel);
 
 			//Play explosion sound
-			GameEngine.PlaySound("realShotgun.wav");   
+			GameLoop.PlaySound("realShotgun.wav");   
 	       
 	        //Lower the enemy amount checker for GUI cleanliness
 			GameLoop.enemyAmountChecker--;
@@ -227,7 +232,13 @@ public class Unit{
 		
 	}
 	
+	public void setScreenWidth(int width){
+		screenWidth = width;
+	}
 	
+	public void setScreenHeight(int height){
+		screenHeight = height;
+	}
 	
 	
 }

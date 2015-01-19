@@ -19,6 +19,8 @@ import javax.swing.JLabel;
 
 
 
+
+import Levels.BaseGameLevel;
 import View.GameScreen;
 
 
@@ -40,7 +42,7 @@ public class GameEngine {
 	
 	public  static 		int 				numberOfEnemychickens 	= 1;
 	public 	static		boolean				enemyDirectionChanger 	= false;
-	public  static  	JLabel 				backgroundImage 		= new JLabel(new ImageIcon(GameScreen.class.getClassLoader().getResource("chickenBackground.jpg")));
+
 	public 	static 		boolean				soundPlaying 			= false;
 	public  static		JLabel				hitFlash				= new JLabel(new ImageIcon(GameScreen.class.getClassLoader().getResource("explosionTransparent.png")));
 	public  static 		Clip 				clip;
@@ -59,6 +61,12 @@ public class GameEngine {
 	 * This method is called when chicken emerges, dies, 
 	 * during start screen, game over screen and win screen
 	 */
+	
+	public GameEngine(){
+
+	}
+	
+	
 	public static void PlaySound(String filePath)
 	{ 
 		 URL url = GameScreen.class.getClassLoader().getResource(filePath);
@@ -81,5 +89,10 @@ public class GameEngine {
 	 
 	}
    
+	
+	public void SetLevel(BaseGameLevel pLevel){
+		
+		pLevel.Draw(GameLoop.dt);
+	}
 
 }

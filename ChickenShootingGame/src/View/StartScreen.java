@@ -38,7 +38,6 @@ public class StartScreen extends JFrame {
 	public static double width = screenSize.getWidth();
 	public static double height = screenSize.getHeight();
 	
-	
 	/** The user has to press the 'Start' on the start screen to start the game
 	 * 
 	 */
@@ -68,11 +67,14 @@ public class StartScreen extends JFrame {
 		
 		GameEngine.PlaySound("explosion.wav");
 		
+		try{
+			Thread.sleep(1000);
+			GameEngine.PlaySound("ChickenOfDutyTwo.wav");
+			}
+		catch (InterruptedException e){
+			e.printStackTrace();
+		}	
 	}
-	
-	
 
-	
-	
 	
 }

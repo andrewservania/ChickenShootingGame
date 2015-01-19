@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import Controller.GameEngine;
+import Controller.GameLoop;
 
 /**
  * @author Andrew

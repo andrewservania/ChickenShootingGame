@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
+import java.awt.event.KeyEvent;
 import javax.swing.JButton;
 
 import Model.Unit;
@@ -17,8 +17,10 @@ import View.StartScreen;
  */
 public class UserInput {
 	
+	
 	public UserInput(final Unit enemy)
 	{
+		
 		enemy.unitEnemyPictureLabel.addMouseListener(new MouseListener() {
 			
 			@Override
@@ -59,10 +61,19 @@ public class UserInput {
 			// If start button is clicked, launch game screen
 
 			GameEngine.PlaySound("Chckns02.wav");
-			new Thread(new GameLoop()).start();	
+			//new Thread(new GameLoop()).start();
+			
+			new Thread(new GameLoop()).start();
+		
 			StartScreen.startScreen.setVisible(false);
 			
 		}
 	});
+		
+		
+	
+		
+		
+		
 	}
 }

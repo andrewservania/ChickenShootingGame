@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import Controller.GameEngine;
+import Controller.GameLoop;
 
 /**
  * @author Andrew
@@ -31,18 +32,18 @@ public class WinScreen {
 		gameWinFrame.add(gameWinLabel);
 		gameWinFrame.setLayout(null);
 		gameWinFrame.setVisible(true);
-		GameEngine.PlaySound("WinningSound.wav");
+		GameLoop.PlaySound("WinningSound.wav");
 		
 		gameWinFrame.setLocation( 
-				(int) StartScreen.width/2 - GameScreen.GAME_WINDOW_WIDTH/2, 
-				(int) StartScreen.height/2 - GameScreen.GAME_WINDOW_HEIGHT/2
+				(int) StartScreen.width/2 - GameLoop.GAME_WINDOW_WIDTH/2, 
+				(int) StartScreen.height/2 - GameLoop.GAME_WINDOW_HEIGHT/2
 				);
 		
 		try
 		{
-			GameScreen.frame.setVisible(false);
+			GameLoop.frame.setVisible(false);
 			Thread.sleep(5000);
-			GameScreen.frame.dispatchEvent(new WindowEvent(GameScreen.frame, WindowEvent.WINDOW_CLOSING));
+			GameLoop.frame.dispatchEvent(new WindowEvent(GameLoop.frame, WindowEvent.WINDOW_CLOSING));
 			System.exit(0);
 		}
 		catch (InterruptedException ex)
