@@ -3,7 +3,6 @@ package Model;
 import java.util.Random;
 
 import Controller.GameEngine;
-import Controller.GameLoop;
 
 public class Goat extends Unit{
 

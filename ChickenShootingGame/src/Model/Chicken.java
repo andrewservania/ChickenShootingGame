@@ -4,9 +4,6 @@ package Model;
 import java.util.Random;
 
 import Controller.GameEngine;
-import Controller.GameLoop;
-
-
 
 /**
  * @author Andrew

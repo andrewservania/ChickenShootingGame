@@ -3,15 +3,12 @@ package Model;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.logging.Level;
-
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.Timer;
-
 import Controller.GameLoop;
 import Controller.UserInput;
-import Levels.LevelFactory;
+
 
 
 
@@ -27,8 +24,9 @@ public class Unit{
 	public  		JLabel 				unitEnemyPictureLabel;
 	public   		int 				xAxisCollisionCheck = 1;
 	public  		int 				yAxisCollisionCheck = 1;
-	public			int					xSpeed = 4;
-	public			int					ySpeed = 4;
+	public			int					xSpeed = 8;
+	public			int					ySpeed = 8;
+	
 	public enum UnitStates {IDLE,APPROACH,GET_POWERUP,ATTACK,EVADE};
 	
 	
@@ -37,7 +35,7 @@ public class Unit{
  	
 		unitEnemyPictureLabel = new JLabel(new ImageIcon(this.getClass().getClassLoader().getResource(enemyType)));	
 		//GameLoop.gameObjects.add(this);
-		GameLoop.frame.add(unitEnemyPictureLabel);
+		
 		GameLoop.player = new UserInput(this);
 		
 		
@@ -46,7 +44,9 @@ public class Unit{
 		yPosition = 100 + (int) (((Math.random() * 360) % 360)*0.6);
 		
 		unitEnemyPictureLabel.setLocation(xPosition, yPosition);
-		unitEnemyPictureLabel.setSize(238, 249);	
+		unitEnemyPictureLabel.setSize(238, 249);
+		GameLoop.frame.add(unitEnemyPictureLabel);
+		
 	}
 	
 	public void MobilizeEnemyInRandomXDirection(int x)
@@ -188,9 +188,6 @@ public class Unit{
 		}
 	}
 	
-	/** 
-	 * Called when enemy button has been clicked on
-	 */
 	public void EnemyKilled()
 	{
 			//If enemy is killed. Show Gun Flash

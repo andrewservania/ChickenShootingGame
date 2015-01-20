@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.Random;
-import java.util.prefs.BackingStoreException;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -23,18 +22,17 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import Levels.BaseGameLevel;
 import Levels.BaseLevelState;
 import Levels.FarmLevel;
+import Levels.FinishedLevel;
 import Levels.LevelFactory;
-import Levels.Finished;
+import Levels.SpaceLevel;
 import Levels.VolcanoLevel;
 import Model.Unit;
 import Model.UnitFactory;
 import View.GameOverScreen;
 import View.GameScreen;
 import View.StartScreen;
-import View.WinScreen;
 
 public class GameLoop extends JFrame implements Runnable, KeyListener{
 
@@ -49,79 +47,71 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 	public static		int 				amountOfEnemiesKilled	= 0;
 	public		 		long 				start_time;   //-1;
 	public		 		long 				end_time;
-	public static		double 				dt						=1;
-	public	static	 	double 				fps;
+	public static		double 				dt						= 1;
+	public static	 	double 				fps;
 	public		 		long 				MsPerDt					=20;
 	public 				int					nLevel					= 0;
-	
-	public 				boolean switchLevelState = false;
-	
-	private static BaseLevelState currentLevel;
-	
-	//GameEngine stuff
-	
-	public  static 		int 				numberOfEnemychickens 	= 3;
-	public 	static		boolean				enemyDirectionChanger 	= false;
+	public 				boolean 			switchLevelState 		= false;
 
-	public 	static 		boolean				soundPlaying 			= false;
-	public  static		JLabel				hitFlash;
-	public  static 		Clip 				clip;
-	public  static  	UserInput 			player;
+	//GameEngine stuff:
+	public  static 				int 				numberOfEnemychickens 	= 3;
+	public 	static				boolean				enemyDirectionChanger 	= false;
+	public 	static 				boolean				soundPlaying 			= false;
+	public  static				JLabel				hitFlash;
+	public  static 				Clip 				clip;
+	public  static  			UserInput 			player;
+	public  static 				BaseLevelState 		currentLevel;
 	
-	//Cursor adaptation to crossHair
-	public 	static		Toolkit 			toolkit 				= Toolkit.getDefaultToolkit(); 
-	public	static		Image 				image 					= toolkit.getImage(GameScreen.class.getClassLoader().getResource("crosshair.png"));
-	public	static		Point 				hotSpot 				= new Point(0,0);
-	public 	static		Cursor 				cursor 					= toolkit.createCustomCursor(image, hotSpot, "crossHair");
+	//Cursor adaptation to crossHair:
+	public 	static				Toolkit 			toolkit 				= Toolkit.getDefaultToolkit(); 
+	public	static				Image 				image 					= toolkit.getImage(GameScreen.class.getClassLoader().getResource("crosshair.png"));
+	public	static				Point 				hotSpot 				= new Point(0,0);
+	public 	static				Cursor 				cursor 					= toolkit.createCustomCursor(image, hotSpot, "crossHair");
 	
-	
-	//GameScreen Stuff
-	private static  final 		long 				serialVersionUID 		= 1L;
+	//GameScreen Stuff:
+	private static final 		long 				serialVersionUID 		= 1L;
 	public 	static		  		JFrame 				frame;
 	public 	static 				int			 		GAME_WINDOW_WIDTH		= 800;
 	public	static				int					GAME_WINDOW_HEIGHT		= 600;
 	public  static				JLabel 				scoreLabel 				= new JLabel("Score: " + score);
 	public  static				JLabel 				fpslabel;
-	public static boolean isLevelChanged = false;
-	public static JLabel levelLabel;
+	public  static 				boolean isLevelChanged = false;
+	public  static 				JLabel levelLabel;
 	
 	public GameLoop(){
 		//this is an in (This gameloop!)
-		new FarmLevel(this);
-		new VolcanoLevel(this);
-		new Finished(this);
-		ActivateGameScreen();
-		SetLevel(LevelFactory.GetFirstLevel());
+		 new FarmLevel(this);
+		 new VolcanoLevel(this);
+		 new SpaceLevel(this);
+		 new FinishedLevel(this);
+		 ActivateGameScreen();
+		 
+		 SetLevel(LevelFactory.GetFirstLevel());
 		
-		
-		scoreLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
-		scoreLabel.setSize(250,30);
-		frame.add(scoreLabel);
-		
+		 scoreLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
+		 scoreLabel.setSize(250,30);
+		 frame.add(scoreLabel);
 		
 		 fpslabel.setFont(new Font("Dialog", Font.PLAIN, 40));
-		  fpslabel.setSize(350, 30);
-		  fpslabel.setLocation(GAME_WINDOW_HEIGHT - 100, 0);
-		  frame.add(fpslabel);
+		 fpslabel.setSize(350, 30);
+		 fpslabel.setLocation(GAME_WINDOW_HEIGHT - 100, 0);
+		 frame.add(fpslabel);
 		
 		 frame.addKeyListener(this);
-		  hitFlash = new JLabel(new ImageIcon(GameLoop.class.getClassLoader().getResource("explosionTransparent.png")));
-			hitFlash.setSize(1024,768);
-			hitFlash.setVisible(false);
-			frame.add(hitFlash);	
-
-		  
-		  levelLabel = new JLabel("Level: " +  currentLevel.GetID());
-		  levelLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
-		  levelLabel.setSize(350, 30);
-		  levelLabel.setLocation(GAME_WINDOW_HEIGHT - 300, 0);
-		  levelLabel.setVisible(true);
-		  frame.add(levelLabel);
+		 hitFlash = new JLabel(new ImageIcon(GameLoop.class.getClassLoader().getResource("explosionTransparent.png")));
+	     hitFlash.setSize(1024,768);
+		 hitFlash.setVisible(false);
+		 frame.add(hitFlash);	
+	  
+		 levelLabel = new JLabel("Level: " +  currentLevel.GetID());
+		 levelLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
+	     levelLabel.setSize(350, 30);
+		 levelLabel.setLocation(GAME_WINDOW_HEIGHT - 300, 0);
+		 levelLabel.setVisible(true);
+		 frame.add(levelLabel);
 		  
 	}	
 	
-
-	//GameScreen stuff
 	public static void ActivateGameScreen()
 	{	
 
@@ -147,18 +137,9 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 		  fpslabel.setSize(350, 30);
 		  fpslabel.setLocation(GAME_WINDOW_HEIGHT - 100, 0);
 		  frame.add(fpslabel);
-		  
 
-
-		
-		
-		
 		
 		frame.setCursor(GameEngine.cursor);	
-		
-
-		
-		
 		
 		frame.setLocation( 
 				(int) StartScreen.width/2 - GAME_WINDOW_WIDTH/2, 
@@ -166,15 +147,8 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 				);
 		frame.setVisible(true);
 
-
-		
-		
-		
-		
-
 	}
 	
-	//GameEngine stuff
 	public static void PlaySound(String filePath)
 	{ 
 		 URL url = GameLoop.class.getClassLoader().getResource(filePath);
@@ -197,19 +171,11 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 	 
 	}
    
-	
-	public void SetLevel(BaseGameLevel pLevel){
-		
-		pLevel.Draw(dt);
-	}
-	//=====
-	
 	public void start() {
 		Thread th = new Thread(this);
 		th.start();
 	}
 	
-
 	public void run() {
 
 
@@ -217,10 +183,7 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 		while (true) 
 		{
 
-			
 			start_time = System.currentTimeMillis();
-			
-			
 			
 			if(score >= 1500){
 				switchLevelState = true;
@@ -228,55 +191,56 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 			}
 	
 				
-				if(isLevelChanged == true){
-					
+			if(isLevelChanged == true){
+				
+				 SetLevel(LevelFactory.NextLevel(currentLevel));
+//				  BaseLevelState.backgroundImage = null;
+//				
+//				  SetLevel(LevelFactory.NextLevel(currentLevel));
+//				  //currentLevel.LoadGraphics();
+//				
+//				  scoreLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
+//				  scoreLabel.setSize(250,30);
+//				  frame.add(scoreLabel);
+//				
+//				  fpslabel.setFont(new Font("Dialog", Font.PLAIN, 40));
+//				  fpslabel.setSize(350, 30);
+//				  fpslabel.setLocation(GAME_WINDOW_HEIGHT - 100, 0);
+//				  frame.add(fpslabel);
+//				
+//				  levelLabel = new JLabel("Level: " +  currentLevel.GetID());
+//				  levelLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
+//				  levelLabel.setSize(350, 30);
+//				  levelLabel.setLocation(GAME_WINDOW_HEIGHT - 300, 0);
+//				  frame.add(levelLabel);
+//				  
+//				  hitFlash = new JLabel(new ImageIcon(GameLoop.class.getClassLoader().getResource("explosionTransparent.png")));
+//				  hitFlash.setSize(1024,768);
+//				  hitFlash.setVisible(false);
+//				  frame.add(hitFlash);	
+				  
 
-					BaseLevelState.backgroundImage = null;
-					
-					SetLevel(LevelFactory.NextLevel(currentLevel));
-					currentLevel.LoadGraphics();
-					
-					scoreLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
-					scoreLabel.setSize(250,30);
-					frame.add(scoreLabel);
-					
-					
-					 fpslabel.setFont(new Font("Dialog", Font.PLAIN, 40));
-					  fpslabel.setSize(350, 30);
-					  fpslabel.setLocation(GAME_WINDOW_HEIGHT - 100, 0);
-					  frame.add(fpslabel);
-					
-					  levelLabel = new JLabel("Level: " +  currentLevel.GetID());
-					  levelLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
-					  levelLabel.setSize(350, 30);
-					  levelLabel.setLocation(GAME_WINDOW_HEIGHT - 300, 0);
-					  frame.add(levelLabel);
-					  
-					  hitFlash = new JLabel(new ImageIcon(GameLoop.class.getClassLoader().getResource("explosionTransparent.png")));
-						hitFlash.setSize(1024,768);
-						hitFlash.setVisible(false);
-						frame.add(hitFlash);	
-					  
-					  
-					  
-					
-					for(Unit unit : gameObjects)
-					{
-						unit.update();
-					}
-					
-					isLevelChanged = false;
-					score = 0;
-					
-				}
+		
+				
+				refreshScreen();
+				
+				isLevelChanged = false;
+				score = 0;
+				
+			}
 			
-			//RandomEnemyGenerator();
-				GenerateEnemyBasedOnLevel();
+			GenerateEnemyBasedOnLevel();
+			
+//			for(Unit unit : gameObjects)
+//			{
+//				unit.update();
+//			}	
 			
 			for(Unit unit : gameObjects)
-			{
-				unit.update();
-			}
+				{
+					frame.add(unit.unitEnemyPictureLabel);
+					unit.update();
+				}
 			
 			// End Game if player Loses
 			if(score <= -10 )
@@ -285,9 +249,10 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 			}
 	
 			// End Game if player wins
-			if(score >= 1400 && currentLevel.dID == LevelFactory.GetMap().size())
+			if(score >= 1400 && currentLevel.dID == LevelFactory.GetMap().size()-1)
 			{
-				LevelFactory.Finished();
+				currentLevel = LevelFactory.Finished();
+				currentLevel.LoadGraphics();
 			}
 			
 			// "Play Gun Reload Sound every 4 shots"
@@ -330,15 +295,10 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 			
 		}	// end while-loop
 		
-	/** Generate enemies, chickens, cows, whatever, this will be a pseudo-generic method
-	 * 
-	 * 
-	 * 
-	 */
 	public static void RandomEnemyGenerator()
 	{
 		try {
-			Thread.sleep(16);
+			Thread.sleep(10);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -378,7 +338,6 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 
 		}
 	}
-
 	
 	public static void GenerateEnemyBasedOnLevel()
 	{
@@ -424,9 +383,6 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 		}
 	}
 	
-	/** To make the game more challenging, the speed of which
-	 *  the enemy chickens appear is raised every 1000 points.
-	 */
 	public static void speedUpEnemyAppearance()
 	{
 		switch(score)
@@ -460,8 +416,6 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 		}
 	}
 	
-	
-	//This method is necessary here according to Bert's StateWithFactoryMethod Code
 	public void SetLevel(BaseLevelState pLevel){
 		
 		assert(pLevel != null);
@@ -475,23 +429,13 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 		
 	}
 
-
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-		BaseLevelState.backgroundImage = null;
-
-		for(Unit unit : gameObjects){
-			unit.update();
+		if(e.getKeyCode() == KeyEvent.VK_N ){
+			  SetLevel(LevelFactory.NextLevel(currentLevel));
+			  refreshScreen();
 		}
-		gameObjects.clear();
-		GenerateEnemyBasedOnLevel();
-			System.out.println("Background set to null");
-		
-		
 	}
-
 
 	@Override
 	public void keyReleased(KeyEvent e) {
@@ -499,13 +443,40 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 		
 	}
 
-
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	public void refreshScreen(){
+		  BaseLevelState.backgroundImage = null;
+			
+		  //SetLevel(LevelFactory.NextLevel(currentLevel));
+		  //currentLevel.LoadGraphics();
+		
+		  scoreLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
+		  scoreLabel.setSize(250,30);
+		  frame.add(scoreLabel);
+		
+		  fpslabel.setFont(new Font("Dialog", Font.PLAIN, 40));
+		  fpslabel.setSize(350, 30);
+		  fpslabel.setLocation(GAME_WINDOW_HEIGHT - 100, 0);
+		  frame.add(fpslabel);
+		
+		  levelLabel = new JLabel("Level: " +  currentLevel.GetID());
+		  levelLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
+		  levelLabel.setSize(350, 30);
+		  levelLabel.setLocation(GAME_WINDOW_HEIGHT - 300, 0);
+		  frame.add(levelLabel);
+		  
+		  hitFlash = new JLabel(new ImageIcon(GameLoop.class.getClassLoader().getResource("explosionTransparent.png")));
+		  hitFlash.setSize(1024,768);
+		  hitFlash.setVisible(false);
+		  frame.add(hitFlash);	
+	
+	
+	}
 	
 	
 }
