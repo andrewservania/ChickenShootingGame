@@ -79,38 +79,61 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 	public  static 				JLabel levelLabel;
 	
 	public GameLoop(){
-		//this is an in (This gameloop!)
-		 new FarmLevel(this);
-		 new VolcanoLevel(this);
-		 new SpaceLevel(this);
-		 new FinishedLevel(this);
+		
+		initializeGameLevels();
+		 
 		 ActivateGameScreen();
 		 
 		 SetLevel(LevelFactory.GetFirstLevel());
 		
+		 setScoreLabel();
+		 setFPSLabel();
+		
+		 frame.addKeyListener(this);	
+		 
+		 setHitFlash();		  
+		 setLevelLabel();
+		  
+	}	
+	
+	private void initializeGameLevels()
+	{
+		 new FarmLevel(this);
+		 new VolcanoLevel(this);
+		 new SpaceLevel(this);
+		 new FinishedLevel(this);
+	}
+	
+	private void setScoreLabel()
+	{
 		 scoreLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
 		 scoreLabel.setSize(250,30);
 		 frame.add(scoreLabel);
-		
+	}
+
+	private void setFPSLabel()
+	{
 		 fpslabel.setFont(new Font("Dialog", Font.PLAIN, 40));
 		 fpslabel.setSize(350, 30);
 		 fpslabel.setLocation(GAME_WINDOW_HEIGHT - 100, 0);
 		 frame.add(fpslabel);
-		
-		 frame.addKeyListener(this);
+	}
+	
+	private void setHitFlash(){
 		 hitFlash = new JLabel(new ImageIcon(GameLoop.class.getClassLoader().getResource("explosionTransparent.png")));
 	     hitFlash.setSize(1024,768);
 		 hitFlash.setVisible(false);
 		 frame.add(hitFlash);	
-	  
+	}
+	
+	private void setLevelLabel(){
 		 levelLabel = new JLabel("Level: " +  currentLevel.GetID());
 		 levelLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
 	     levelLabel.setSize(350, 30);
 		 levelLabel.setLocation(GAME_WINDOW_HEIGHT - 300, 0);
 		 levelLabel.setVisible(true);
 		 frame.add(levelLabel);
-		  
-	}	
+	}
 	
 	public static void ActivateGameScreen()
 	{	
@@ -477,6 +500,7 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 	
 	
 	}
+	
 	
 	
 }
