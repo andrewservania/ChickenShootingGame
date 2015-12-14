@@ -80,8 +80,7 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 	
 	public GameLoop(){
 		
-		initializeGameLevels();
-		 
+		 initializeGameLevels(); 
 		 ActivateGameScreen();
 		 
 		 SetLevel(LevelFactory.GetFirstLevel());
@@ -101,7 +100,7 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 		 new FarmLevel(this);
 		 new VolcanoLevel(this);
 		 new SpaceLevel(this);
-		 new FinishedLevel(this);
+		// new FinishedLevel(this);
 	}
 	
 	private void setScoreLabel()
