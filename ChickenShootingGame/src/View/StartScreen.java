@@ -19,6 +19,15 @@ import Controller.UserInput;
  * The class which is responsible for showing the Game Over Screen 
  * This class serves as a 'View' within the Model-View-Controller 
  * Design Pattern
+ * 
+ * Tasks: 
+ * 1) Make some text final!
+ * 2) Clear up unused variables!
+ * 3) Keep access modifiers consistent! Avoid too much public and private variables mixed up together!
+ * 4) Use getters and setters instead of directly accessing variables! Creates too much dependencies!
+ * 5) Add Javadoc style comments to all your methods!
+ * 6) Make your methods as short as possible! 
+ * 
  */
 public class StartScreen extends JFrame {
 
@@ -34,6 +43,11 @@ public class StartScreen extends JFrame {
 	public static double height = screenSize.getHeight();
 	private JLabel gameStartImage;
 	private static final String IMAGE_BACKGROUND = "ChickenOfDutyBackground.png";
+	private static final String EXPLOSION_SOUND = "explosion.wav";
+	private static final String INTRO_SOUND = "ChickenOfDutyTwo.wav";
+	private static final String WINDOW_NAME = "Chicken of Duty 2";
+	private static final String START_BUTTON_TEXT = "Start";
+	
 	private static final int windowWidth = 800;
 	private static final int windowHeight = 678;
 	
@@ -59,6 +73,9 @@ public class StartScreen extends JFrame {
 	}
 	
 	
+	/**
+	 * Set the name and screen size of the start screen
+	 */
 	private void initializeStartScreen(){
 		
 		startScreen = new JFrame("Chicken of Duty 2");	
@@ -70,6 +87,9 @@ public class StartScreen extends JFrame {
 		startScreen.setVisible(true);
 	}
 	
+	/**
+	 * Set the position, color and the font of the start button 
+	 */
 	private void initializeStartButton()
 	{
 		startButton = new JButton("Start");
@@ -79,6 +99,12 @@ public class StartScreen extends JFrame {
 		startButton.setFont(new Font("Dialog",Font.PLAIN,60));
 	}
 	
+	/**
+	 * Set the background image of the start screen
+	 * @param width The width of the image
+	 * @param height The height of the image
+	 * @param imageResource the name of the image. example "image1.png"
+	 */
 	private void initializeGameStartImage(int width, int height, String imageResource)
 	{
 		gameStartImage = new JLabel(new ImageIcon((this.getClass().getClassLoader().getResource(imageResource))));
