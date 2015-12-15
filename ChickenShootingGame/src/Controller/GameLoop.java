@@ -38,6 +38,10 @@ import View.StartScreen;
  * @author Andrew
  *
  */
+/**
+ * @author Andrew
+ *
+ */
 public class GameLoop extends JFrame implements Runnable, KeyListener{
 
 	//public static GameScreen gameScreen;
@@ -90,7 +94,7 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 		 SetLevel(LevelFactory.GetFirstLevel());
 		
 		 setScoreLabel();
-		 setFPSLabel();
+		setFPSLabel();
 		
 		 frame.addKeyListener(this);	
 		 
@@ -126,8 +130,6 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 		
 		//TODO: SET LEVEL BACKGROUND HERE!! ORIGINALLY IT WAS HERE!!
 		
-		setScoreLabel();
-		setFPSLabel();	
 		frame.setCursor(GameEngine.cursor);		
 		frame.setLocation( 
 				(int) StartScreen.width/2 - GAME_WINDOW_WIDTH/2, 
@@ -220,10 +222,10 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 			}
 	
 			// End Game if player wins
-			if(score >= 1400 && currentLevel.dID == LevelFactory.GetMap().size()-1)
+			if(score >= 1400 && currentLevel.dID == 4)
 			{
-				//currentLevel = LevelFactory.Finished();
-				//currentLevel.LoadGraphics();
+				currentLevel = LevelFactory.Finished();
+				currentLevel.LoadGraphics();
 			}
 			
 			// "Play Gun Reload Sound every 4 shots"
@@ -420,6 +422,7 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 		
 	}
 
+	
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
