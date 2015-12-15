@@ -92,12 +92,10 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 		 setGameScreen();
 		 
 		 SetLevel(LevelFactory.GetFirstLevel());
+		 frame.addKeyListener(this);	
 		
 		 setScoreLabel();
-		setFPSLabel();
-		
-		 frame.addKeyListener(this);	
-		 
+		 setFPSLabel();		 
 		 setHitFlash();		  
 		 setLevelLabel();
 		  
