@@ -13,7 +13,7 @@ import Controller.GameLoop;
 public class FinishedLevel extends BaseLevelState implements BaseGameLevel{
 
 	public FinishedLevel(GameLoop game) {
-		super(game, -1);
+		super(game, 4);
 		// TODO Auto-generated constructor stub
 	}
 

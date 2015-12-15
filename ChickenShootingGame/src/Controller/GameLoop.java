@@ -34,6 +34,10 @@ import View.GameOverScreen;
 import View.GameScreen;
 import View.StartScreen;
 
+/**
+ * @author Andrew
+ *
+ */
 public class GameLoop extends JFrame implements Runnable, KeyListener{
 
 	//public static GameScreen gameScreen;
@@ -95,45 +99,17 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 		  
 	}	
 	
+	/**
+	 * Add the game levels
+	 */
 	private void initializeGameLevels()
 	{
 		 new FarmLevel(this);
 		 new VolcanoLevel(this);
 		 new SpaceLevel(this);
-		// new FinishedLevel(this);
+		 new FinishedLevel(this);
 	}
 	
-	private static void setScoreLabel()
-	{
-		 scoreLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
-		 scoreLabel.setSize(250,30);
-		 frame.add(scoreLabel);
-	}
-
-	private static void setFPSLabel()
-	{
-	     fpslabel = new JLabel("FPS: " + fps);
-		 fpslabel.setFont(new Font("Dialog", Font.PLAIN, 40));
-		 fpslabel.setSize(350, 30);
-		 fpslabel.setLocation(GAME_WINDOW_HEIGHT - 100, 0);
-		 frame.add(fpslabel);
-	}
-	
-	private static void setHitFlash(){
-		 hitFlash = new JLabel(new ImageIcon(GameLoop.class.getClassLoader().getResource("explosionTransparent.png")));
-	     hitFlash.setSize(1024,768);
-		 hitFlash.setVisible(false);
-		 frame.add(hitFlash);	
-	}
-	
-	private static void setLevelLabel(){
-		 levelLabel = new JLabel("Level: " +  currentLevel.GetID());
-		 levelLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
-	     levelLabel.setSize(350, 30);
-		 levelLabel.setLocation(GAME_WINDOW_HEIGHT - 300, 0);
-		 levelLabel.setVisible(true);
-		 frame.add(levelLabel);
-	}
 
 	
 	
@@ -344,7 +320,7 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 		}
 		
 		
-		if (enemyAmountChecker > 0 && enemyAmountChecker < 3)
+		if (enemyAmountChecker > 0l && enemyAmountChecker < 3)
 		{
 
 				//TODO: Moet in een 'factory' method geconverteerd worden
@@ -378,7 +354,9 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 		}
 	}
 	
-	public static void speedUpEnemyAppearance()
+	
+	
+	public static void setEnemyRespawnSpeed()
 	{
 		switch(score)
 		{
@@ -411,6 +389,10 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 		}
 	}
 	
+	/**
+	 * Set the game level
+	 * @param pLevel
+	 */
 	public void SetLevel(BaseLevelState pLevel){
 		
 		assert(pLevel != null);
@@ -444,35 +426,62 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 		
 	}
 
+	
+	/**
+	 * Re-add a labels to the screen
+	 */
 	public void refreshScreen(){
-		  BaseLevelState.backgroundImage = null;
-			
-		  //SetLevel(LevelFactory.NextLevel(currentLevel));
-		  //currentLevel.LoadGraphics();
-		
-		  scoreLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
-		  scoreLabel.setSize(250,30);
-		  frame.add(scoreLabel);
-		
-		  fpslabel.setFont(new Font("Dialog", Font.PLAIN, 40));
-		  fpslabel.setSize(350, 30);
-		  fpslabel.setLocation(GAME_WINDOW_HEIGHT - 100, 0);
-		  frame.add(fpslabel);
-		
-		  levelLabel = new JLabel("Level: " +  currentLevel.GetID());
-		  levelLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
-		  levelLabel.setSize(350, 30);
-		  levelLabel.setLocation(GAME_WINDOW_HEIGHT - 300, 0);
-		  frame.add(levelLabel);
-		  
-		  hitFlash = new JLabel(new ImageIcon(GameLoop.class.getClassLoader().getResource("explosionTransparent.png")));
-		  hitFlash.setSize(1024,768);
-		  hitFlash.setVisible(false);
-		  frame.add(hitFlash);	
-	
-	
+		  BaseLevelState.backgroundImage = null;	
+		  setScoreLabel();
+		  setFPSLabel();
+		  setLevelLabel();
+		  setHitFlash();
 	}
 	
+	
+	/**
+	 * Add the score label to screen
+	 */
+	private static void setScoreLabel()
+	{
+		scoreLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
+		scoreLabel.setSize(250,30);
+		frame.add(scoreLabel);
+	}
+	
+	
+	/**
+	 * Add the FPS label to screen
+	 */
+	private static void setFPSLabel()
+	{
+		fpslabel = new JLabel("FPS: " + fps);
+		fpslabel.setFont(new Font("Dialog", Font.PLAIN, 40));
+		fpslabel.setSize(350, 30);
+		fpslabel.setLocation(GAME_WINDOW_HEIGHT - 100, 0);
+		frame.add(fpslabel);
+	}
+	
+	/**
+	 * Add the level label to screen.
+	 */
+	private static void setLevelLabel(){
+		levelLabel = new JLabel("Level: " +  currentLevel.GetID());
+		levelLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
+		levelLabel.setSize(350, 30);
+		levelLabel.setLocation(GAME_WINDOW_HEIGHT - 300, 0);
+		levelLabel.setVisible(true);
+		frame.add(levelLabel);
+	}
+	/**
+	 * Prepare the hit flash image to appear whenever an enemy is killed.
+	 */
+	private static void setHitFlash(){
+		hitFlash = new JLabel(new ImageIcon(GameLoop.class.getClassLoader().getResource("explosionTransparent.png")));
+		hitFlash.setSize(1024,768);
+		hitFlash.setVisible(false);
+		frame.add(hitFlash);	
+	}
 	
 	
 }
