@@ -81,7 +81,7 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 	public GameLoop(){
 		
 		 initializeGameLevels(); 
-		 ActivateGameScreen();
+		 setGameScreen();
 		 
 		 SetLevel(LevelFactory.GetFirstLevel());
 		
@@ -103,29 +103,30 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 		// new FinishedLevel(this);
 	}
 	
-	private void setScoreLabel()
+	private static void setScoreLabel()
 	{
 		 scoreLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
 		 scoreLabel.setSize(250,30);
 		 frame.add(scoreLabel);
 	}
 
-	private void setFPSLabel()
+	private static void setFPSLabel()
 	{
+	     fpslabel = new JLabel("FPS: " + fps);
 		 fpslabel.setFont(new Font("Dialog", Font.PLAIN, 40));
 		 fpslabel.setSize(350, 30);
 		 fpslabel.setLocation(GAME_WINDOW_HEIGHT - 100, 0);
 		 frame.add(fpslabel);
 	}
 	
-	private void setHitFlash(){
+	private static void setHitFlash(){
 		 hitFlash = new JLabel(new ImageIcon(GameLoop.class.getClassLoader().getResource("explosionTransparent.png")));
 	     hitFlash.setSize(1024,768);
 		 hitFlash.setVisible(false);
 		 frame.add(hitFlash);	
 	}
 	
-	private void setLevelLabel(){
+	private static void setLevelLabel(){
 		 levelLabel = new JLabel("Level: " +  currentLevel.GetID());
 		 levelLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
 	     levelLabel.setSize(350, 30);
@@ -133,36 +134,25 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 		 levelLabel.setVisible(true);
 		 frame.add(levelLabel);
 	}
+
 	
-	public static void ActivateGameScreen()
+	
+	/**
+	 * Add score and FPS labels to screen
+	 */
+	public static void setGameScreen()
 	{	
 
-		fpslabel = new JLabel("FPS: " + fps);
 		frame = new JFrame("Chicken Shooting Game");
-		
-		
-		
 		frame.setLayout(null);
 		frame.setSize(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//TODO: SET LEVEL BACKGROUND HERE!! ORIGINALLY IT WAS HERE!!
 		
-
-		
-		scoreLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
-		scoreLabel.setSize(250,30);
-		frame.add(scoreLabel);
-		
-		
-		 fpslabel.setFont(new Font("Dialog", Font.PLAIN, 40));
-		  fpslabel.setSize(350, 30);
-		  fpslabel.setLocation(GAME_WINDOW_HEIGHT - 100, 0);
-		  frame.add(fpslabel);
-
-		
-		frame.setCursor(GameEngine.cursor);	
-		
+		setScoreLabel();
+		setFPSLabel();	
+		frame.setCursor(GameEngine.cursor);		
 		frame.setLocation( 
 				(int) StartScreen.width/2 - GAME_WINDOW_WIDTH/2, 
 				(int) StartScreen.height/2 - GAME_WINDOW_HEIGHT/2
@@ -171,6 +161,10 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 
 	}
 	
+	/**
+	 * Reusable method to play WAV files during the game.
+	 * @param filePath
+	 */
 	public static void PlaySound(String filePath)
 	{ 
 		 URL url = GameLoop.class.getClassLoader().getResource(filePath);
@@ -193,11 +187,19 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 	 
 	}
    
+	
+	/**
+	 * Start a thread
+	 */
 	public void start() {
 		Thread th = new Thread(this);
 		th.start();
 	}
 	
+	
+	/**
+	 * Start a game loop using a thread
+	 */
 	public void run() {
 
 
@@ -214,36 +216,7 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 	
 				
 			if(isLevelChanged == true){
-				
-				 SetLevel(LevelFactory.NextLevel(currentLevel));
-//				  BaseLevelState.backgroundImage = null;
-//				
-//				  SetLevel(LevelFactory.NextLevel(currentLevel));
-//				  //currentLevel.LoadGraphics();
-//				
-//				  scoreLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
-//				  scoreLabel.setSize(250,30);
-//				  frame.add(scoreLabel);
-//				
-//				  fpslabel.setFont(new Font("Dialog", Font.PLAIN, 40));
-//				  fpslabel.setSize(350, 30);
-//				  fpslabel.setLocation(GAME_WINDOW_HEIGHT - 100, 0);
-//				  frame.add(fpslabel);
-//				
-//				  levelLabel = new JLabel("Level: " +  currentLevel.GetID());
-//				  levelLabel.setFont(new Font("Dialog", Font.PLAIN, 40));
-//				  levelLabel.setSize(350, 30);
-//				  levelLabel.setLocation(GAME_WINDOW_HEIGHT - 300, 0);
-//				  frame.add(levelLabel);
-//				  
-//				  hitFlash = new JLabel(new ImageIcon(GameLoop.class.getClassLoader().getResource("explosionTransparent.png")));
-//				  hitFlash.setSize(1024,768);
-//				  hitFlash.setVisible(false);
-//				  frame.add(hitFlash);	
-				  
-
-		
-				
+	
 				refreshScreen();
 				
 				isLevelChanged = false;
@@ -273,8 +246,8 @@ public class GameLoop extends JFrame implements Runnable, KeyListener{
 			// End Game if player wins
 			if(score >= 1400 && currentLevel.dID == LevelFactory.GetMap().size()-1)
 			{
-				currentLevel = LevelFactory.Finished();
-				currentLevel.LoadGraphics();
+				//currentLevel = LevelFactory.Finished();
+				//currentLevel.LoadGraphics();
 			}
 			
 			// "Play Gun Reload Sound every 4 shots"
