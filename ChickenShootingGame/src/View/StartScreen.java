@@ -21,12 +21,12 @@ import Controller.UserInput;
  * Design Pattern
  * 
  * Tasks: 
- * 1) Make some text final!
+ * 1) Make some string literals final!
  * 2) Clear up unused variables!
  * 3) Keep access modifiers consistent! Avoid too much public and private variables mixed up together!
  * 4) Use getters and setters instead of directly accessing variables! Creates too much dependencies!
- * 5) Add Javadoc style comments to all your methods!
- * 6) Make your methods as short as possible! 
+ * 5) Add Javadoc style comments to all methods!
+ * 6) Make methods as short as possible! 
  * 
  */
 public class StartScreen extends JFrame {
@@ -47,7 +47,6 @@ public class StartScreen extends JFrame {
 	private static final String INTRO_SOUND = "ChickenOfDutyTwo.wav";
 	private static final String WINDOW_NAME = "Chicken of Duty 2";
 	private static final String START_BUTTON_TEXT = "Start";
-	
 	private static final int windowWidth = 800;
 	private static final int windowHeight = 678;
 	
